@@ -1,0 +1,6 @@
+- hosts: webappdb
+  become: yes
+  vars:
+  tasks:
+    - name: setup app user for mariadb.
+      command: ls

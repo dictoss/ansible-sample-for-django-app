@@ -1,0 +1,34 @@
+- hosts: webapp
+  become: yes
+  vars:
+    httpd_conf_subdir_items:
+      - conf.d
+      #- conf
+      #- conf.module.d
+  tasks:
+    - name: copy logrotate config file
+      become_user: "{{ ansible_ssh_user }}"
+      synchronize:
+        src: "etc/logrotate.d.rhel/"
+        dest: "/etc/logrotate.d/"
+        recursive: yes
+    - name: chown logrotate config files
+      file:
+        path: "/etc/logrotate.d.rhel/"
+        owner: "root"
+        group: "root"
+        recurse: yes
+    - name: copy httpd config files
+      become_user: "{{ ansible_ssh_user }}"
+      synchronize:
+        src: "etc/apache2.rhel/{{ item }}"
+        dest: "{{ httpd_conf_dir }}/"
+        recursive: yes
+      with_items: "{{ httpd_conf_subdir_items }}"
+    - name: chown httpd config files
+      file:
+        path: "{{ httpd_conf_dir }}/{{ item }}"
+        owner: "root"
+        group: "root"
+        recurse: yes
+      with_items: "{{ httpd_conf_subdir_items }}"

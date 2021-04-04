@@ -1,0 +1,12 @@
+- hosts: webappdb
+  become: yes
+  vars:
+  tasks:
+    - name: install database server
+      dnf:
+        name: "{{ packages }}"
+        update_cache: yes
+        state: installed
+      vars:
+        packages:
+        - "@mariadb:10.3"

@@ -1,0 +1,9 @@
+- import_playbook: debian11_01_os_setup.yml
+- import_playbook: debian11_10_webapp_db.yml
+- import_playbook: debian11_11_webapp_db_setup.yml
+- import_playbook: debian11_20_webapp_webserver.yml
+- import_playbook: debian11_21_webapp_webserver_setup.yml
+- import_playbook: debian11_30_webapp_dirfile.yml
+- import_playbook: debian11_40_webapp_pip.yml
+- import_playbook: debian11_50_webapp_migrate.yml
+- import_playbook: debian11_60_webapp_restart.yml

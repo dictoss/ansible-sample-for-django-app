@@ -1,0 +1,10 @@
+/var/log/sampleproj/webapp.log
+{
+    compress
+    copytruncate
+    missingok
+    ifempty
+    daily
+    rotate 31
+    dateext
+}

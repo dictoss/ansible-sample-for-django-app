@@ -1,0 +1,6 @@
+app_dirname: sampleproj
+app_name: webapp
+app_app_name: webapp
+wsgi_app_basedir: /var/www/wsgi_apps
+app_log_basedir: /var/log
+wsgi_eggdir: /var/www/eggs

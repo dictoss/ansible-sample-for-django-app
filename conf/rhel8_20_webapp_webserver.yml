@@ -1,0 +1,30 @@
+- hosts: webapp
+  become: yes
+  vars:
+  tasks:
+    - name: install webserver
+      dnf:
+        name: "{{ packages }}"
+        update_cache: yes
+        state: present
+      vars:
+        packages:
+          - "@httpd:2.4"
+    - name: install web application server
+      dnf:
+        name: "{{ packages }}"
+        update_cache: yes
+        state: present
+      vars:
+        packages:
+          - python3
+          - python3-devel
+          - python3-setuptools
+          - python3-pip
+          - mariadb-devel
+          - gcc
+          - make
+          - git
+          - python3-mod_wsgi
+    - name: restart apache
+      service: name={{ httpd_name }} state=restarted

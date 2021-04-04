@@ -1,0 +1,4 @@
+- import_playbook: debian11_30_webapp_dirfile.yml
+- import_playbook: debian11_40_webapp_pip.yml
+- import_playbook: debian11_50_webapp_migrate.yml
+- import_playbook: debian11_60_webapp_restart.yml

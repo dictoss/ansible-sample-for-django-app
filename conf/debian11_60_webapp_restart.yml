@@ -1,0 +1,6 @@
+- hosts: webapp
+  become: yes
+  vars:
+  tasks:
+    - name: restart apache
+      service: name={{ httpd_name }} state=restarted

@@ -1,0 +1,31 @@
+[webapp]
+test-c8s ansible_host=192.168.1.4 ansible_connection=smart
+
+[webappdb]
+test-c8s ansible_host=192.168.1.4 ansible_connection=smart
+
+[webapp:vars]
+ansible_python_interpreter=/usr/libexec/platform-python
+ansible_ssh_port=22
+ansible_ssh_user=username
+#ansible_ssh_pass=
+ansible_ssh_private_key_file=~/.ssh/id_rsa
+
+# NOTICE! set env
+app_env=stg
+
+# os depend vars
+httpd_name=httpd
+httpd_conf_dir=/etc/httpd
+httpd_public_dir=/var/www/html
+httpd_user=apache
+httpd_group=apache
+webapp_python_ver=python3
+webapp_pip_ver=pip3
+
+[webappdb:vars]
+ansible_python_interpreter=/usr/libexec/platform-python
+ansible_ssh_port=22
+ansible_ssh_user=username
+#ansible_ssh_pass=
+ansible_ssh_private_key_file=~/.ssh/id_rsa

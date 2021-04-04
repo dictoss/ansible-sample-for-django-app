@@ -1,0 +1,40 @@
+- hosts: all
+  become: yes
+  tasks:
+    - name: disable selinux
+      selinux: state=disabled
+    - name: install package
+      yum:
+        name: "{{ packages }}"
+        update_cache: yes
+        state: present
+      vars:
+        packages:
+          - epel-release
+          - chrony
+          - cronie
+          - cronie-anacron
+          - logrotate
+          - mailx
+          - vim-enhanced
+          - less
+          - screen
+          - curl
+          - wget
+          - zip
+          - unzip
+          - rsync
+    - name: copy chrony config file
+      become_user: "{{ ansible_ssh_user }}"
+      synchronize:
+        src: "etc/chrony.rhel77/chrony.conf.{{ app_env }}"
+        dest: "/etc/chrony.conf"
+        recursive: no
+    - name: chown chrony config files
+      file:
+        path: "/etc/chrony.conf"
+        owner: "root"
+        group: "root"
+        recurse: no
+    - name: restart chrony
+      service: name=chronyd state=restarted

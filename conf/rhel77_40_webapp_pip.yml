@@ -1,0 +1,12 @@
+- hosts: webapp
+  become: yes
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  tasks:
+    - name: install python libraries use pip
+      pip:
+        requirements: "{{ wsgi_app_basedir }}/{{ app_name }}/requirements.txt"
+        state: present
+        executable: "{{ webapp_pip_ver }}"
+      environment:
+        CFLAGS: "-std=c99"

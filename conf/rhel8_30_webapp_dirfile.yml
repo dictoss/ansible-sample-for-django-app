@@ -1,0 +1,79 @@
+- hosts: webapp
+  become: yes
+  vars:
+  tasks:
+    - name: create directory (eggs, apps, logs)
+      file:
+        path: "{{ item }}"
+        state: directory
+        recurse: no
+        owner: "{{ httpd_user }}"
+        group: "{{ httpd_group }}"
+        mode: 0755
+      with_items:
+        - "{{ wsgi_eggdir }}"
+        - "{{ wsgi_app_basedir }}"
+        - "{{ app_log_basedir }}/{{ app_name }}"
+    - name: create directory for www-public /static
+      file:
+        path: "/var/www/html/static"
+        state: directory
+        recurse: no
+        owner: root
+        group: root
+        mode: 0755
+    - name: create directory for wwwapp root
+      file:
+        path: "{{ wsgi_app_basedir }}/{{ app_dirname }}"
+        state: directory
+        recurse: no
+        owner: root
+        group: root
+        mode: 0755
+    - name: local backup copy exist webapp files on target host.
+      delegate_to: "{{ inventory_hostname }}"
+      synchronize:
+        src: "{{ wsgi_app_basedir }}/{{ app_dirname }}/"
+        dest: "{{ wsgi_app_basedir }}/{{ app_dirname }}_backup_{{ ansible_date_time.iso8601_basic_short }}"
+        recursive: yes
+        archive: yes
+        owner: yes
+        group: yes
+    - name: remote copy static files
+      become_user: "{{ ansible_ssh_user }}"
+      synchronize:
+        src: "var_www_html/"
+        dest: "{{ httpd_public_dir }}/"
+        recursive: yes
+        rsync_opts:
+          - "--exclude=.git"
+    - name: chown www static files
+      file:
+        path: "{{ httpd_public_dir }}/"
+        owner: "root"
+        group: "root"
+        recurse: yes
+    - name: remote copy webapp files
+      become_user: "{{ ansible_ssh_user }}"
+      synchronize:
+        src: "../../../{{ app_dirname }}"
+        dest: "{{ wsgi_app_basedir }}/"
+        recursive: yes
+        rsync_opts:
+          - "--exclude=.git"
+    - name: chown webapp files
+      file:
+        path: "{{ wsgi_app_basedir }}/{{ app_dirname }}"
+        owner: "{{ httpd_user }}"
+        group: "{{ httpd_group }}"
+        recurse: yes
+    - name: create link for settings
+      file:
+        src: "settings_{{ app_env }}.py"
+        dest: "{{ wsgi_app_basedir }}/{{ app_dirname }}/{{ app_dirname }}/settings/__init__.py"
+        state: link
+    - name: create link for apps
+      file:
+        src: "apps_{{ app_env }}.py"
+        dest: "{{ wsgi_app_basedir }}/{{ app_dirname }}/{{ app_app_name }}/apps/__init__.py"
+        state: link

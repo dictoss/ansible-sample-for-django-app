@@ -1,0 +1,9 @@
+- import_playbook: rhel77_01_os_setup.yml
+- import_playbook: rhel77_10_webapp_db.yml
+- import_playbook: rhel77_11_webapp_db_setup.yml
+- import_playbook: rhel77_20_webapp_webserver.yml
+- import_playbook: rhel77_21_webapp_webserver_setup.yml
+- import_playbook: rhel77_30_webapp_dirfile.yml
+- import_playbook: rhel77_40_webapp_pip.yml
+- import_playbook: rhel77_50_webapp_migrate.yml
+- import_playbook: rhel77_60_webapp_restart.yml

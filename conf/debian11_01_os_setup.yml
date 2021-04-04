@@ -1,0 +1,36 @@
+- hosts: all
+  become: yes
+  tasks:
+    - name: apt update
+      apt: update_cache=true
+    - name: install package
+      apt:
+        pkg:
+          - chrony
+          - cron
+          - logrotate
+          - bsd-mailx
+          - vim
+          - less
+          - lv
+          - nkf
+          - screen
+          - curl
+          - wget
+          - zip
+          - unzip
+          - rsync
+    - name: copy chrony config file
+      become_user: "{{ ansible_ssh_user }}"
+      synchronize:
+        src: "etc/chrony/chrony.conf.{{ app_env }}"
+        dest: "/etc/chrony/chrony.conf"
+        recursive: no
+    - name: chown chrony config files
+      file:
+        path: "/etc/chrony/chrony.conf"
+        owner: "root"
+        group: "root"
+        recurse: no
+    - name: restart chrony
+      service: name=chronyd state=restarted

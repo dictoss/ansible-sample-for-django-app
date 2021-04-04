@@ -1,0 +1,11 @@
+- hosts: webappdb
+  become: yes
+  vars:
+  tasks:
+    - name: install database server
+      apt:
+        pkg:
+        - mariadb-server
+    - name: restart mariadb
+      service: name=mariadb state=restarted
+

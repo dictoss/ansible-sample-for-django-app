@@ -1,0 +1,25 @@
+- hosts: webapp
+  become: yes
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  tasks:
+    - name: django check
+      command: sudo -u "{{ httpd_user }}" "{{ webapp_python_ver }}" manage.py check
+      args:
+        chdir: "{{ wsgi_app_basedir }}/{{ app_dirname }}"
+    - name: django makemigrations
+      command: sudo -u "{{ httpd_user }}" "{{ webapp_python_ver }}" manage.py makemigrations
+      args:
+        chdir: "{{ wsgi_app_basedir }}/{{ app_dirname }}"
+    - name: django makemigrations app
+      command: sudo -u "{{ httpd_user }}" "{{ webapp_python_ver }}" manage.py makemigrations "{{ app_app_name }}"
+      args:
+        chdir: "{{ wsgi_app_basedir }}/{{ app_dirname }}"
+    - name: django migrate auth
+      command: sudo -u "{{ httpd_user }}" "{{ webapp_python_ver }}" manage.py migrate auth
+      args:
+        chdir: "{{ wsgi_app_basedir }}/{{ app_dirname }}"
+    - name: django migrate
+      command: sudo -u "{{ httpd_user }}" "{{ webapp_python_ver }}" manage.py migrate
+      args:
+        chdir: "{{ wsgi_app_basedir }}/{{ app_dirname }}"
